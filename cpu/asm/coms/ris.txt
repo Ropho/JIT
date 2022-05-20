@@ -1,0 +1,8 @@
+push 2
+jump kek
+out
+kek:
+push 3
+out
+pop ax
+end
