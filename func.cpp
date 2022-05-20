@@ -11,13 +11,8 @@ const size_t PAGE_SIZE = 4096;
 
 int in (void) {
 
-//STACK IS (ALIGNED)
-    // puts ("START OF SCANF");
-
     int rax = 0;
-    scanf ("%d", &rax); //ломает регистры
-
-    // puts ("END OF SCANF");
+    scanf ("%d", &rax);
 
     return rax;
 }
@@ -25,36 +20,7 @@ int in (void) {
 
 void out (long long input) {
 
-    // puts ("HEHEHEHEH");
-    // asm ("push rax\n\t"
-    //     "push rbx\n\t"
-    //     "push rcx\n\t"
-    //     "push rdx\n\t"
-    //     "push rdi\n\t"
-    //     "push rsi\n\t"
-    //     "push r10\n\t"
-    //     "push r11\n\t"
-    //     "push r12\n\t"
-    //     "push r13\n\t"
-    //     "push r14\n\t"
-    //     "push r15\n\t");
-    
     printf ("%lld\n", input);
-
-    // asm ("pop r15\n\t"
-    //     "pop r14\n\t"
-    //     "pop r13\n\t"
-    //     "pop r12\n\t"
-    //     "pop r11\n\t"
-    //     "pop r10\n\t"
-    //     "pop rsi\n\t"
-    //     "pop rdi\n\t"
-    //     "pop rdx\n\t"
-    //     "pop rcx\n\t"
-    //     "pop rbx\n\t"
-    //     "pop rax\n\t");
-    
-    // puts ("EHEHEH");
     return;
 }
 
@@ -97,11 +63,10 @@ size_t fillin_trans (TEXT *trans, TEXT *bin) {
     assert (bin);
     assert (bin->buff);
 
-    // puts ("EQEQ");
-        size_t ip     = 0;
-        size_t ip_bin = 0;
+    size_t ip     = 0;
+    size_t ip_bin = 0;
 
-        size_t cmd_num = 0;
+    size_t cmd_num = 0;
 
     for (size_t pass = 0; pass < 2; ++pass) {
 

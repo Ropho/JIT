@@ -1,9 +1,3 @@
-//rax, rbx, rcx, rdx = used (SAVE RBX)
-//rdi, rsi, r8-r10 
-//(r11 - saves return address)
-//rsp, rbp, r12-r15 - prohibited
-
-
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 DEF_CMD(end, 0x10, 0, 235619509,
@@ -202,166 +196,43 @@ DEF_CMD(pop, 0x12, 1, 1872004450,
 
 DEF_CMD(jump, 0x20, 1, 1563107817,
 {
-    // puts ("JUMP");
-    ++ip_bin;
-     
-    if (!pass) {
-        trans->buff[ip] = (char)0xBE;
-        ++ip;
-        trans->buff[ip] = (char)0x00;
-        ++ip;
-    }
-    else {
-        trans->buff[ip] = (char)0xEB;
-        ++ip;
-        
-        char offset = *((int*)(bin->buff + ip_bin));
-
-        for (int index = 0; index < bin->cmd_num; ++index) {
-            if (bin->cmd_ip[index] == offset) {
-                offset = trans->cmd_ip[index] - (ip + 1);
-                break;
-            }
-        }
-        printf ("JUMP: %d\n", offset);
-        
-        trans->buff[ip] = offset;
-        ++ip;
-    }
-    ip_bin += sizeof (int) / sizeof (char);
-
+    JUMP(NO_COMPARE);
 })
 
 
 DEF_CMD(ja, 0x21, 1, 1714451963,
 {
-//     type tmp1 = pop (head);
-//     type tmp2 = pop (head);
-
-//    if (tmp2 > tmp1) {                                                    
-                                                                                            
-//         ++ip;                                                                               
-//         ip = *(int*)(cpu->code + ip);                                                                                                                                   \
-//     }                                                                                    
-//     else {                                                                                     
-//     ++ip;
-//     ip += sizeof (int) / sizeof (char); 
-//     }
+    JUMP(COMPARE_JA);
 })
 
 
 DEF_CMD(jae, 0x22, 1, 707756480,
 {
-        
-//     type tmp1 = pop (head);
-//     type tmp2 = pop (head);
-
-//    if (tmp2 >= tmp1) {                                                    
-                                                                                            
-//         ++ip;                                                                               
-//         ip = *(int*)(cpu->code + ip);                                                                                                                                   \
-//     }                                                                                    
-//     else {                                                                                     
-//     ++ip;
-//     ip += sizeof (int) / sizeof (char); 
-//     }
+    JUMP(COMPARE_JAE);
 })
 
 
 DEF_CMD(jb, 0x23, 1, 1062963264,
 {
-    
-//     type tmp1 = pop (head);
-//     type tmp2 = pop (head);
-
-//    if (tmp2 < tmp1) {                                                    
-                                                                                            
-//         ++ip;                                                                               
-//         ip = *(int*)(cpu->code + ip);                                                                                                                                   \
-//     }                                                                                    
-//     else {                                                                                     
-//     ++ip;
-//     ip += sizeof (int) / sizeof (char); 
-//     }
+    JUMP(COMPARE_JB);
 })
 
 
 DEF_CMD(jbe, 0x24, 1, 105038799,
 {
-    
-//     type tmp1 = pop (head);
-//     type tmp2 = pop (head);
-
-//    if (tmp2 <= tmp1) {                                                    
-                                                                                            
-//         ++ip;                                                                               
-//         ip = *(int*)(cpu->code + ip);                                                                                                                                   \
-//     }                                                                                    
-//     else {                                                                                     
-//     ++ip;
-//     ip += sizeof (int) / sizeof (char); 
-    // }
+   JUMP(COMPARE_JBE);
 })
 
 
 DEF_CMD(je, 0x25, 1, 973582470,
 {
-    
-    // type tmp1 = pop (head);
-    // type tmp2 = pop (head);
-
-    // #ifdef INT_T
-    //     if (tmp1 == tmp2) {
-    //         ++ip;                                                                               
-    //         ip = *(int*)(cpu->code + ip);                                                                                                                                   \
-    //     }                                                                                    
-    //     else {                                                                                     
-    //     ++ip;
-    //     ip += sizeof (int) / sizeof (char); 
-    //     }
-    // #else
-    //     if (fabs (tmp1 - tmp2) < EPS) {
-
-    //         ++ip;                                                                               
-    //         ip = *(int*)(cpu->code + ip);                                                                                                                                   \
-    //     }                                                                                    
-    //     else {                                                                                     
-    //     ++ip;
-    //     ip += sizeof (int) / sizeof (char); 
-    //     }
-    // #endif                                                   
-                                                                                            
-
+    JUMP(COMPARE_E);
 })
 
 
 DEF_CMD(jne, 0x26, 1, 1561585812,
 {
-    
-    // type tmp1 = pop (head);
-    // type tmp2 = pop (head);
-
-    // #ifdef INT_T
-    //     if (tmp1 != tmp2) {
-    //         ++ip;                                                                               
-    //         ip = *(int*)(cpu->code + ip);                                                                                                                                   \
-    //     }                                                                                    
-    //     else {                                                                                     
-    //     ++ip;
-    //     ip += sizeof (int) / sizeof (char); 
-    //     }
-    // #else
-    //     if (fabs (tmp1 - tmp2) > EPS) {
-
-    //         ++ip;                                                                               
-    //         ip = *(int*)(cpu->code + ip);                                                                                                                                   \
-    //     }                                                                                    
-    //     else {                                                                                     
-    //     ++ip;
-    //     ip += sizeof (int) / sizeof (char); 
-    //     }
-    // #endif
-
+    JUMP(COMPARE_NE);
 })
 
 

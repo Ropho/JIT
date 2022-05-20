@@ -1,8 +1,9 @@
-push 2
+push 4
+push 3
+jb print
 jump kek
+print:
+push 6
 out
 kek:
-push 3
-out
-pop ax
 end

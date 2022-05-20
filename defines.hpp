@@ -218,5 +218,146 @@
                         trans->buff[ip] = 0x5D;     \
                         ++ip;                       \
                     }while(0)                       
+/////////////////////////////////////////////////
+///////////////////JUMP//////////////////////////
+#define JUMP(CMP) do {                                              \
+                                                                    \
+    ++ip_bin;                                                       \
+                                                                    \
+    if (!pass) {                                                    \
+                                                                    \
+        CMP;                                                        \
+        trans->buff[ip] = (char)0x00;                               \
+        ++ip;                                                       \
+    }                                                               \
+    else {                                                          \
+                                                                    \
+        CMP;                                                        \
+                                                                    \
+        char offset = *((int*)(bin->buff + ip_bin));                \
+                                                                    \
+        for (int index = 0; index < bin->cmd_num; ++index) {        \
+            if (bin->cmd_ip[index] == offset) {                     \
+                offset = trans->cmd_ip[index] - (ip + 1);           \
+                break;                                              \
+            }                                                       \
+        }                                                           \
+        printf ("J: %d\n", offset);                                 \
+                                                                    \
+        trans->buff[ip] = offset;                                   \
+        ++ip;                                                       \
+    }                                                               \
+    ip_bin += sizeof (int) / sizeof (char);                         \
+                                                                    \
+}while (0)
 
+
+
+#define NO_COMPARE do {                              \
+                        trans->buff[ip] = (char)0xEB;\
+                        ++ip;                       \
+                    }while(0) 
+
+//! pop rdi
+//! pop rsi
+//! cmp rdi, rsi
+//! je ...
+#define COMPARE_E do {                              \
+                        trans->buff[ip] = 0x5E;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x5F;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x48;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x39;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0xF7;     \
+                        ++ip;                       \
+                        trans->buff[ip] = (char)0x74;\
+                        ++ip;                       \
+                    }while(0) 
+
+//! pop rdi
+//! pop rsi
+//! cmp rdi, rsi
+//! jne....
+#define COMPARE_NE do {                             \
+                        trans->buff[ip] = 0x5E;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x5F;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x48;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x39;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0xF7;     \
+                        ++ip;                       \
+                        trans->buff[ip] = (char)0x75;\
+                        ++ip;                       \
+                    }while(0)                      
+
+//! pop rdi
+//! pop rsi
+//! cmp rdi, rsi
+#define COMPARE_JBE do {                             \
+                        trans->buff[ip] = 0x5E;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x5F;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x48;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x39;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0xF7;     \
+                        ++ip;                       \
+                        trans->buff[ip] = (char)0x76;\
+                        ++ip;                       \
+                    }while(0)     
+
+#define COMPARE_JB do {                             \
+                        trans->buff[ip] = 0x5E;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x5F;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x48;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x39;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0xF7;     \
+                        ++ip;                       \
+                        trans->buff[ip] = (char)0x72;\
+                        ++ip;                       \
+                    }while(0)         
+
+#define COMPARE_JA do {                             \
+                        trans->buff[ip] = 0x5E;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x5F;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x48;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x39;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0xF7;     \
+                        ++ip;                       \
+                        trans->buff[ip] = (char)0x77;\
+                        ++ip;                       \
+                    }while(0)     
+
+#define COMPARE_JAE do {                             \
+                        trans->buff[ip] = 0x5E;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x5F;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x48;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0x39;     \
+                        ++ip;                       \
+                        trans->buff[ip] = 0xF7;     \
+                        ++ip;                       \
+                        trans->buff[ip] = (char)0x73;\
+                        ++ip;                       \
+                    }while(0)  
+                    
+                           
 #endif
