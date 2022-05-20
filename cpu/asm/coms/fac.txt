@@ -1,11 +1,11 @@
-in;  n - число
+in
 pop ax
 push 1
-pop bx; bx - наше текущее произведение
+pop bx
 call factorial
 push bx
 out
-end
+jump end
 factorial:
 push ax
 push 2
@@ -22,3 +22,5 @@ call factorial
 ret
 vixod:
 ret
+end:
+end

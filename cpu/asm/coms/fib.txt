@@ -3,36 +3,37 @@ pop ax
 push 1
 pop bx
 in
-pop cx; НОМЕР N, число какое хотим получить
+pop cx
 push 2
-pop dx;current номер
+pop dx
 push cx
 push 2
 ja konec1
 push ax
 out
-end
+jump end
 konec1:
 call func
 push ax
 out
-end; КОНЕЦ МЕЙНА
+jump end
 func:
 push dx
 push 1
 add
-pop dx; УВЕЛИЧИЛИ dx на 1
+pop dx
 push ax
 push bx
 add
 push ax
 pop bx
-pop ax;НОВОЕ ЧИСЛО ФИБОНАЧЧИ ЛЕЖИТ В AX, предыдущее в BX
+pop ax
 push dx
 push cx
 jne konec2
 ret
 konec2:
 call func
-push 1;ретерн работает только после команды (придется убрать default)
 ret
+end:
+end

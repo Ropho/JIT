@@ -87,7 +87,8 @@ size_t fillin_trans (TEXT *trans, TEXT *bin) {
             else {
                     if (bin->buff[ip_bin] != CMD_jump && bin->buff[ip_bin] != CMD_ja && bin->buff[ip_bin] != CMD_jae &&
                     bin->buff[ip_bin] != CMD_jb && bin->buff[ip_bin] != CMD_jbe && bin->buff[ip_bin] != CMD_je &&
-                    bin->buff[ip_bin] != CMD_jne && bin->buff[ip_bin]) {
+                    bin->buff[ip_bin] != CMD_jne && bin->buff[ip_bin] && 
+                    bin->buff[ip_bin] != CMD_call) {
                         ip     = trans->cmd_ip[cmd_num + 1];
                         ip_bin = bin->cmd_ip[cmd_num + 1];
                         ++cmd_num;

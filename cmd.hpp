@@ -238,19 +238,43 @@ DEF_CMD(jne, 0x26, 1, 1561585812,
 
 DEF_CMD(call, 0x40, 1, 46998724,
 {
-     
-    // ++ip;
-    // pushka (cpu->func, ip + sizeof (int) / sizeof (char))
-    // ip = *(int*)(cpu->code + ip);
-
+    ++ip_bin;                                                       
+                                                                    
+    if (!pass) {                                                    
+                                                                    
+        CALL_CMP;  
+                                                         
+        *((int*)(trans->buff + ip)) = (int)0x00;                               
+        ip += sizeof (int) / sizeof (char);                                         
+    }                                                               
+    else {                                                          
+                                                                    
+        CALL_CMP;                                                   
+                                                                    
+        int offset = *((int*)(bin->buff + ip_bin));                
+        printf ("OFFSET: %d\n", offset);                
+        for (int index = 0; index < bin->cmd_num; ++index) {        
+            if (bin->cmd_ip[index] == (char)offset) {                     
+                offset = trans->cmd_ip[index] - (ip + sizeof (int) / sizeof (char));           
+                break;                                              
+            }                                                       
+        }                                                           
+        printf ("CALL: %d\n", offset);                                 
+                               
+        *((int*)(trans->buff + ip)) = offset;                                   
+        ip += sizeof (int) / sizeof (char);                                                       
+    }                                                               
+    ip_bin += sizeof (int) / sizeof (char);                         
 
 })
 
 
 DEF_CMD(ret, 0x41, 0, 1832507332,
 {
-    
-    // ip = pop (cpu->func);
+    ++ip_bin;
+
+    trans->buff[ip] = (char)0xC3;
+    ++ip;
 })
 
 
@@ -356,6 +380,41 @@ DEF_CMD(del, 0x18, 0, 952552813,
 
 DEF_CMD(sqrt, 0x19, 0, 729115097,
 {
+
+    ++ip_bin;
+
+    POP_RDI;
+
+    trans->buff[ip] = (char)0x41;           //mov r10, out(adress)
+    ++ip;
+    trans->buff[ip] = (char)0xBA;
+    ++ip;
+    unsigned long ptr = (unsigned long)out;
+
+    for (size_t index = 0; index < 4; ++index) {
+        *(trans->buff + ip + index) = *((char *)&ptr + index);
+        // printf ("%X ", *((char *)&ptr + index));
+
+    }
+    ip += sizeof (int) / sizeof (char);
+/////////////////////////////////////////////////
+    SAVE_RAX;
+    SAVE_RBX;
+    SAVE_RCX;
+    SAVE_RDX;
+/////////////////////////////////////////////////
+    trans->buff[ip] = (char)0x41;
+    ++ip;
+    trans->buff[ip] = (char)0xFF;
+    ++ip;
+    trans->buff[ip] = (char)0xD2;
+    ++ip;                                   //call r10
+/////////////////////////////////////////////////
+    RESTORE_RAX;
+    RESTORE_RBX;
+    RESTORE_RCX;
+    RESTORE_RDX;
+
     // pushka (head, sqrt (pop (head)))
     // ++ip;
 })

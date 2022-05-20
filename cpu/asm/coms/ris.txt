@@ -1,9 +1,10 @@
-push 4
+call mem
+jump end
+mem:
 push 3
-jb print
-jump kek
-print:
-push 6
 out
-kek:
+ret
+end:
+push 5
+out
 end

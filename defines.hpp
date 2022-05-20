@@ -253,13 +253,17 @@
 
 
 
-#define NO_COMPARE do {                              \
-                        trans->buff[ip] = (char)0xEB;\
-                        ++ip;                       \
+#define NO_COMPARE do {                                 \
+                        trans->buff[ip] = (char)0xEB;   \
+                        ++ip;                           \
                     }while(0) 
 
-//! pop rdi
+#define CALL_CMP do {                               \
+                    trans->buff[ip] = (char)0xE8;   \
+                    ++ip;                           \
+                }while (0)
 //! pop rsi
+//! pop rdi
 //! cmp rdi, rsi
 //! je ...
 #define COMPARE_E do {                              \
@@ -277,8 +281,8 @@
                         ++ip;                       \
                     }while(0) 
 
-//! pop rdi
 //! pop rsi
+//! pop rdi
 //! cmp rdi, rsi
 //! jne....
 #define COMPARE_NE do {                             \
@@ -296,8 +300,8 @@
                         ++ip;                       \
                     }while(0)                      
 
-//! pop rdi
 //! pop rsi
+//! pop rdi
 //! cmp rdi, rsi
 #define COMPARE_JBE do {                             \
                         trans->buff[ip] = 0x5E;     \
