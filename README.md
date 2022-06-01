@@ -7,11 +7,11 @@
 
 [2.USAGE](#USAGE)
 
-[3.JIT INFO](#JIT INFO)
+[3.JIT INFO](#INFO)
 
-[4.RUN TIME COMPARASON](#RUN TIME COMPARASON)
+[4.RUN-TIME COMPARASON](#COMPARASON)
 
-# INTRO
+## INTRO
 
 Tasks of this project were: 
 1. To make a binary translator from **my language** into **x86** architecture.
@@ -19,14 +19,14 @@ Tasks of this project were:
 
 
 
-# USAGE
+## USAGE
 
-## Compile
+### Compile
 		all:
 	gcc -g -masm=intel main.cpp func.cpp std_func.cpp -DNDEBUG -no-pie -lm -o main	
 
 
-## OPTIONS
+### OPTIONS
 
 1.  Processor
     > AMD Ryzen 5 4500U
@@ -40,10 +40,10 @@ Tasks of this project were:
     + time ./program (WSL)
     + total instruction fetch cost (kcachegrind)
 
-# INFO:
+## INFO:
 
-## To look into **my language commands** visit https://github.com/Ropho/lang
+### To look into **my language commands** visit https://github.com/Ropho/lang
 
 
 
-# RUN TIME COMPARASON
+## COMPARASON
