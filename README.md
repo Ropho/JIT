@@ -7,9 +7,9 @@
 
 [2.USAGE](#USAGE)
 
-[3.JIT INFO](#JIT_COMPILER INFO)
+[3.JIT INFO](#JIT INFO)
 
-[4.RUN TIME COMPARASON](#RUN TIME COMPRASON)
+[4.RUN TIME COMPARASON](#RUN TIME COMPARASON)
 
 # INTRO
 
@@ -40,11 +40,10 @@ Tasks of this project were:
     + time ./program (WSL)
     + total instruction fetch cost (kcachegrind)
 
-# JIT COMPILER INFO:
+# INFO:
 
 ## To look into **my language commands** visit https://github.com/Ropho/lang
 
-##
 
 
 # RUN TIME COMPARASON
