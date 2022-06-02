@@ -48,3 +48,9 @@ Tasks of this project were:
 
 ## RUN-TIME_COMPARASON
 
+## Measured time table:
+|  	     |CPU (own) | JIT   |
+|:----------:|:--------:|:-----:|
+|real (secs) |0.0065    |0.00008|
+
+> Total Increase: 82 times.
