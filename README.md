@@ -22,8 +22,8 @@ Tasks of this project were:
 ## USAGE
 
 ### Compile
-		all:
-	gcc -g -masm=intel main.cpp func.cpp std_func.cpp -DNDEBUG -no-pie -lm -o main	
+	all:
+		gcc -g -masm=intel main.cpp func.cpp std_func.cpp -DNDEBUG -no-pie -lm -o main	
 
 
 ### OPTIONS
