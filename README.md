@@ -37,8 +37,8 @@ Tasks of this project were:
 4.  Compiler
     > GCC
 5.  Timer
-    + time ./program (WSL)
-    + total instruction fetch cost (kcachegrind)
+    > time ./program (WSL)
+    > total instruction fetch cost (kcachegrind)
 
 ## JIT_INFO
 
