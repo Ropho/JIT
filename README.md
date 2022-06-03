@@ -115,16 +115,13 @@ Tasks of this project were:
     SAVE_RCX;
     SAVE_RDX;
 /////////////////////////////////////////////////
-//! mov r10, addr in
+//! mov r10, addr
     trans->buff[ip++] = 0x41;
     trans->buff[ip++] = 0xBA;
 
     unsigned long ptr = (unsigned long) in;
 
-    for (size_t index = 0; index < 4; ++index) {
-        *(trans->buff + ip + index) = *((char *) &ptr + index);
-    }
-
+    *((int *)(trans->buff + ip)) = *((int *)&ptr);
     ip += sizeof (int) / sizeof (char);
 
     SAVE_RSP;
@@ -142,23 +139,32 @@ Tasks of this project were:
     RESTORE_RDX;
 ```
 
+```c++
+
+int in (void) {
+
+    int rax = 0;
+    scanf ("%d", &rax);
+
+    return rax;
+}
+```
+
+
+
 ### out
 ```c++
     ++ip_bin;
 
     POP_RDI;
 
-//! mov r10, addr out
+//! mov r10, addr
     trans->buff[ip++] = 0x41;
     trans->buff[ip++] = 0xBA;
 
     unsigned long ptr = (unsigned long)out;
 
-    for (size_t index = 0; index < 4; ++index) {
-        *(trans->buff + ip + index) = *((char *)&ptr + index);
-        // printf ("%X ", *((char *)&ptr + index));
-
-    }
+    *((int *)(trans->buff + ip)) = *((int *)&ptr);
     ip += sizeof (int) / sizeof (char);
 /////////////////////////////////////////////////
     SAVE_RAX;
@@ -173,6 +179,15 @@ Tasks of this project were:
     RESTORE_RCX;
     RESTORE_RDX;
 ```
+```c++
+void out (long long input) {
+
+    printf ("%lld\n", input);
+    return;
+}
+```
+
+
 ### sqrt
 ```c++
 
@@ -185,11 +200,8 @@ Tasks of this project were:
 
     unsigned long ptr = (unsigned long)r_sqrt;
 
-////CHANGE TO INT PTR!!!!!!!!!!!
-    for (size_t index = 0; index < 4; ++index) {
-        *(trans->buff + ip + index) = *((char *)&ptr + index);
-        // printf ("%X ", *((char *)&ptr + index));
-    }
+    *((int *)(trans->buff + ip)) = *((int *)&ptr);
+    
     ip += sizeof (int) / sizeof (char);
 /////////////////////////////////////////////////
     SAVE_RAX;
@@ -205,6 +217,14 @@ Tasks of this project were:
     RESTORE_RBX;
     RESTORE_RCX;
     RESTORE_RDX;
+```
+```c++
+int r_sqrt (int input) {
+    
+    int output = round (sqrt (input));
+    
+    return output;
+}
 ```
 
 ## RUN-TIME_COMPARASON
