@@ -1,12 +1,12 @@
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
-DEF_CMD(end, 0x10, 0, 235619509,
+DEF_CMD(end, 0x10, 0,
 {
-    trans->buff[ip] = (char)0xC3;
+    trans->buff[ip] = 0xC3;
 })
 
 
-DEF_CMD(in, 0x15, 1, 917538081,
+DEF_CMD(in, 0x15, 1,
 {
     ++ip_bin;
 /////////////////////////////////////////////////
@@ -15,28 +15,20 @@ DEF_CMD(in, 0x15, 1, 917538081,
     SAVE_RCX;
     SAVE_RDX;
 /////////////////////////////////////////////////
-    trans->buff[ip] = (char)0x41;           //mov r10, in(adress)
-    ++ip;
-    trans->buff[ip] = (char)0xBA;
-    ++ip;
-    unsigned long ptr = (unsigned long)in;
+//! mov r10, addr
+    trans->buff[ip++] = 0x41;
+    trans->buff[ip++] = 0xBA;
 
-    for (size_t index = 0; index < 4; ++index) {
-        *(trans->buff + ip + index) = *((char *)&ptr + index);
-    }
+    unsigned long ptr = (unsigned long) in;
 
+    *((int *)(trans->buff + ip)) = *((int *)&ptr);
     ip += sizeof (int) / sizeof (char);
 
     SAVE_RSP;
     ALIGN_STACK;
 
-    trans->buff[ip] = (char)0x41;
-    ++ip;
-    trans->buff[ip] = (char)0xFF;           //call r10
-    ++ip;
-    trans->buff[ip] = (char)0xD2;
-    ++ip;
-
+    CALL_R10;
+    
     RESTORE_RSP;
 
     PUSH_RAX;
@@ -48,23 +40,19 @@ DEF_CMD(in, 0x15, 1, 917538081,
 })
 
 
-DEF_CMD(out, 0x16, 1, 1461626465,
+DEF_CMD(out, 0x16, 1,
 {
     ++ip_bin;
 
     POP_RDI;
 
-    trans->buff[ip] = (char)0x41;           //mov r10, out(adress)
-    ++ip;
-    trans->buff[ip] = (char)0xBA;
-    ++ip;
+//! mov r10, addr
+    trans->buff[ip++] = 0x41;
+    trans->buff[ip++] = 0xBA;
+
     unsigned long ptr = (unsigned long)out;
 
-    for (size_t index = 0; index < 4; ++index) {
-        *(trans->buff + ip + index) = *((char *)&ptr + index);
-        // printf ("%X ", *((char *)&ptr + index));
-
-    }
+    *((int *)(trans->buff + ip)) = *((int *)&ptr);
     ip += sizeof (int) / sizeof (char);
 /////////////////////////////////////////////////
     SAVE_RAX;
@@ -72,12 +60,7 @@ DEF_CMD(out, 0x16, 1, 1461626465,
     SAVE_RCX;
     SAVE_RDX;
 /////////////////////////////////////////////////
-    trans->buff[ip] = (char)0x41;
-    ++ip;
-    trans->buff[ip] = (char)0xFF;
-    ++ip;
-    trans->buff[ip] = (char)0xD2;
-    ++ip;                                   //call r10
+    CALL_R10;
 /////////////////////////////////////////////////
     RESTORE_RAX;
     RESTORE_RBX;
@@ -86,19 +69,15 @@ DEF_CMD(out, 0x16, 1, 1461626465,
 })
 
 
-DEF_CMD(push, 0x11, 1, 1721897475,
+DEF_CMD(push, 0x11, 1,
 {
 
     ++ip_bin;
 
     if (bin->buff[ip_bin] == 0x00) {
         ++ip_bin;
+
         PUSH_NUM;
-
-        *((int*)(trans->buff + ip)) = *((int*)(bin->buff + ip_bin));
-        ip     += sizeof (int) / sizeof (char);
-        ip_bin += sizeof (int) / sizeof (char);
-
     }
     else if (bin->buff[ip_bin] == 0x01) {
         
@@ -129,6 +108,12 @@ DEF_CMD(push, 0x11, 1, 1721897475,
     }
     else if (bin->buff[ip_bin] == 0x02) {
 
+        // ++ip_bin;
+
+        // size_t pos = 
+        // PUSH_FROM_RAM()
+
+        
         // ++ip;
         // pushka  (head, cpu->ram[(int)cpu->regs[cpu->code[ip]]])
         //Sleep (1000);
@@ -147,7 +132,7 @@ DEF_CMD(push, 0x11, 1, 1721897475,
 })
 
 
-DEF_CMD(pop, 0x12, 1, 1872004450,
+DEF_CMD(pop, 0x12, 1,
 {
 
     ++ip_bin;
@@ -194,49 +179,50 @@ DEF_CMD(pop, 0x12, 1, 1872004450,
 })
 
 
-DEF_CMD(jump, 0x20, 1, 1563107817,
+DEF_CMD(jump, 0x20, 1,
 {
     JUMP(NO_COMPARE);
 })
 
 
-DEF_CMD(ja, 0x21, 1, 1714451963,
+DEF_CMD(jg, 0x21, 1,
 {
-    JUMP(COMPARE_JA);
+    JUMP(COMPARE_JG);
 })
 
 
-DEF_CMD(jae, 0x22, 1, 707756480,
+
+DEF_CMD(jge, 0x22, 1,
 {
-    JUMP(COMPARE_JAE);
+    JUMP(COMPARE_JGE);
 })
 
 
-DEF_CMD(jb, 0x23, 1, 1062963264,
+DEF_CMD(jl, 0x23, 1,
 {
-    JUMP(COMPARE_JB);
+    JUMP(COMPARE_JL);
 })
 
 
-DEF_CMD(jbe, 0x24, 1, 105038799,
+DEF_CMD(jle, 0x24, 1,
 {
-   JUMP(COMPARE_JBE);
+   JUMP(COMPARE_JLE);
 })
 
 
-DEF_CMD(je, 0x25, 1, 973582470,
+DEF_CMD(je, 0x25, 1,
 {
     JUMP(COMPARE_E);
 })
 
 
-DEF_CMD(jne, 0x26, 1, 1561585812,
+DEF_CMD(jne, 0x26, 1,
 {
     JUMP(COMPARE_NE);
 })
 
 
-DEF_CMD(call, 0x40, 1, 46998724,
+DEF_CMD(call, 0x40, 1,
 {
     ++ip_bin;                                                       
                                                                     
@@ -252,14 +238,14 @@ DEF_CMD(call, 0x40, 1, 46998724,
         CALL_CMP;                                                   
                                                                     
         int offset = *((int*)(bin->buff + ip_bin));                
-        printf ("OFFSET: %d\n", offset);                
+        // printf ("OFFSET: %d\n", offset);                
         for (int index = 0; index < bin->cmd_num; ++index) {        
             if (bin->cmd_ip[index] == (char)offset) {                     
                 offset = trans->cmd_ip[index] - (ip + sizeof (int) / sizeof (char));           
                 break;                                              
             }                                                       
         }                                                           
-        printf ("CALL: %d\n", offset);                                 
+        // printf ("CALL: %d\n", offset);                                 
                                
         *((int*)(trans->buff + ip)) = offset;                                   
         ip += sizeof (int) / sizeof (char);                                                       
@@ -269,16 +255,15 @@ DEF_CMD(call, 0x40, 1, 46998724,
 })
 
 
-DEF_CMD(ret, 0x41, 0, 1832507332,
+DEF_CMD(ret, 0x41, 0,
 {
     ++ip_bin;
 
-    trans->buff[ip] = (char)0xC3;
-    ++ip;
+    trans->buff[ip++] = 0xC3;
 })
 
 
-DEF_CMD(add, 0x13, 0, 1278523110,
+DEF_CMD(add, 0x13, 0,
 {
     ++ip_bin;
 
@@ -286,18 +271,16 @@ DEF_CMD(add, 0x13, 0, 1278523110,
 
     POP_RSI;
 
-    trans->buff[ip] = 0x48;
-    ++ip;
-    trans->buff[ip] = 0x01;
-    ++ip;
-    trans->buff[ip] = 0xF7;     //add rdi, rsi
-    ++ip;
+//! add rdi, rsi
+    trans->buff[ip++] = 0x48;
+    trans->buff[ip++] = 0x01;
+    trans->buff[ip++] = 0xF7;
 
     PUSH_RDI;
 })
 
 
-DEF_CMD(sub, 0x17, 0, 1756310217,
+DEF_CMD(sub, 0x17, 0,
 {
     ++ip_bin;
 
@@ -305,19 +288,17 @@ DEF_CMD(sub, 0x17, 0, 1756310217,
 
     POP_RDI;
 
-    trans->buff[ip] = 0x48;
-    ++ip;
-    trans->buff[ip] = 0x29;
-    ++ip;
-    trans->buff[ip] = 0xF7;     //sub rdi, rsi
-    ++ip;
+//! sub rdi, rsi
+    trans->buff[ip++] = 0x48;
+    trans->buff[ip++] = 0x29;
+    trans->buff[ip++] = 0xF7;
 
     PUSH_RDI;
 
 })
 
 
-DEF_CMD(mul, 0x14, 0, 1281615354,
+DEF_CMD(mul, 0x14, 0,
 {
 
     ++ip_bin;
@@ -330,12 +311,12 @@ DEF_CMD(mul, 0x14, 0, 1281615354,
     
     POP_RAX;
 
-    trans->buff[ip] = 0x48;
-    ++ip;
-    trans->buff[ip] = 0xF7;     //mul
-    ++ip;
-    trans->buff[ip] = 0xE2;
-    ++ip;
+
+    trans->buff[ip++] = 0x48;
+    trans->buff[ip++] = 0xF7;
+
+    // trans->buff[ip++] = 0xE2;    //mul
+    trans->buff[ip++] = 0xEA;     //imul
 
     PUSH_RAX;
 
@@ -345,7 +326,7 @@ DEF_CMD(mul, 0x14, 0, 1281615354,
 })
 
 
-DEF_CMD(del, 0x18, 0, 952552813,
+DEF_CMD(del, 0x18, 0,
 {
     ++ip_bin;
 
@@ -360,12 +341,13 @@ DEF_CMD(del, 0x18, 0, 952552813,
 
     POP_RAX;
 
-    trans->buff[ip] = 0x48;
-    ++ip;
-    trans->buff[ip] = 0xF7;         //div
-    ++ip;
-    trans->buff[ip] = 0xF1;
-    ++ip;
+    trans->buff[ip++] = 0x48;
+    trans->buff[ip++] = 0x99;     //cqo
+    
+    trans->buff[ip++] = 0x48;
+    trans->buff[ip++] = 0xF7;
+    // trans->buff[ip++] = 0xF1;      //div         
+    trans->buff[ip++] = 0xF9;         //idiv         
 
     PUSH_RAX;
 /////////////////////////////////////////////////
@@ -378,24 +360,20 @@ DEF_CMD(del, 0x18, 0, 952552813,
 })
 
 
-DEF_CMD(sqrt, 0x19, 0, 729115097,
+DEF_CMD(sqrt, 0x19, 0,
 {
 
     ++ip_bin;
 
     POP_RDI;
 
-    trans->buff[ip] = (char)0x41;           //mov r10, out(adress)
-    ++ip;
-    trans->buff[ip] = (char)0xBA;
-    ++ip;
-    unsigned long ptr = (unsigned long)out;
+    trans->buff[ip++] = 0x41;           //mov r10, out(adress)
+    trans->buff[ip++] = 0xBA;
 
-    for (size_t index = 0; index < 4; ++index) {
-        *(trans->buff + ip + index) = *((char *)&ptr + index);
-        // printf ("%X ", *((char *)&ptr + index));
+    unsigned long ptr = (unsigned long)r_sqrt;
 
-    }
+    *((int *)(trans->buff + ip)) = *((int *)&ptr);
+    
     ip += sizeof (int) / sizeof (char);
 /////////////////////////////////////////////////
     SAVE_RAX;
@@ -403,18 +381,12 @@ DEF_CMD(sqrt, 0x19, 0, 729115097,
     SAVE_RCX;
     SAVE_RDX;
 /////////////////////////////////////////////////
-    trans->buff[ip] = (char)0x41;
-    ++ip;
-    trans->buff[ip] = (char)0xFF;
-    ++ip;
-    trans->buff[ip] = (char)0xD2;
-    ++ip;                                   //call r10
+    CALL_R10;
 /////////////////////////////////////////////////
+    PUSH_RAX;
+
     RESTORE_RAX;
     RESTORE_RBX;
     RESTORE_RCX;
     RESTORE_RDX;
-
-    // pushka (head, sqrt (pop (head)))
-    // ++ip;
 })

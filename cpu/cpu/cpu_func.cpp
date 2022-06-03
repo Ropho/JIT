@@ -21,7 +21,7 @@ int prohod_code (cpu_type *cpu, my_stack *head, int size) {
             #define DEF_CMD(name, number, argc, hash, code) case number: code; break;
             #define DEF_REG(name, number, hash)
 
-            #include "cmds.h"
+            #include "../asm/cmds.h"
 
             #undef DEF_CMD
             #undef DEF_REG

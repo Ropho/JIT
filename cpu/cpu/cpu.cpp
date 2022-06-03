@@ -2,9 +2,13 @@
 
 int main (void) {
 
+    clock_t start_t = clock();
+/////////////////////////////////////////////////
+#ifndef NDEBUG
     dump
+#endif
 
-    FILE *in = fopen ("binary.bin", "rb");
+    FILE *in = fopen ("../asm/binary.bin", "rb");
 
     my_stack *head = nullptr;
 
@@ -38,12 +42,19 @@ int main (void) {
 
     fread (cpu.code, sizeof (char), size, in);
 
+/////////////////////////////////////////////////
     if (prohod_code (&cpu, head, size))
         puts ("BUGG in prohod");
+/////////////////////////////////////////////////
 
     dead (head)             
 
     dead (cpu.func)
 
+/////////////////////////////////////////////////
+    clock_t end_t = clock();
+    
+    double total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
+    printf("\nTotal time taken by CPU: %f\n", total_t);
     return 0;
 }

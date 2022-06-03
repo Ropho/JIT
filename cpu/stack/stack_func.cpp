@@ -71,7 +71,7 @@ size_t EXIT_COND = 0;
         FILE *out = fopen ("DUMP", "a");
         assert (out != nullptr);
 
-        fprintf (out, "STACK <%s> [%x] at (%s) at (%s) (%d): ", head->stack_name, head, head->func_name, head->file_name, head->line);
+        fprintf (out, "STACK <%s> [%p] at (%s) at (%s) (%d): ", head->stack_name, head, head->func_name, head->file_name, head->line);
 
         if (head->error == MEMMORY_ALLOCATION_ERROR) {
 
