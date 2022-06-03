@@ -7,7 +7,7 @@
 
 [2.USAGE](#USAGE)
 
-[3.JIT INFO](#JIT_INFO)
+[3.COMMANDS LIST](#COMMANDS-LIST)
 
 [4.RUN TIME COMPARASON](#RUN-TIME_COMPARASON)
 
@@ -42,10 +42,55 @@ Tasks of this project were:
 
 ## JIT_INFO
 
-### To look into **my language commands** visit https://github.com/Ropho/lang
+### To look into **my language commands** visit https://github.com/Ropho/CPU
+
+### Comparason between **my asm/cpu cmds and x86**
+
+|asm/cpu cmd          |x86 cmd              |
+|:-------------------:|:-------------------:|
+|end 		      |0xC3                 |
+|in		      |[in](###in)
 
 
 
+
+### in
+```c++
+    ++ip_bin;
+/////////////////////////////////////////////////
+    SAVE_RAX;
+    SAVE_RBX;
+    SAVE_RCX;
+    SAVE_RDX;
+/////////////////////////////////////////////////
+//! mov r10, addr
+    trans->buff[ip++] = 0x41;
+    trans->buff[ip++] = 0xBA;
+
+    unsigned long ptr = (unsigned long) in;
+
+    for (size_t index = 0; index < 4; ++index) {
+        *(trans->buff + ip + index) = *((char *) &ptr + index);
+    }
+
+    ip += sizeof (int) / sizeof (char);
+
+    SAVE_RSP;
+    ALIGN_STACK;
+
+    CALL_R10;
+    
+    RESTORE_RSP;
+
+    PUSH_RAX;
+/////////////////////////////////////////////////
+    RESTORE_RAX;
+    RESTORE_RBX;
+    RESTORE_RCX;
+    RESTORE_RDX;
+
+
+```
 ## RUN-TIME_COMPARASON
 
 ## Measured time table:
