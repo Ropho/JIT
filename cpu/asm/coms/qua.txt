@@ -19,7 +19,7 @@ sub
 pop dx
 push dx
 push 0
-jb ans1; D < 0
+jb ans1
 push dx
 sqrt
 pop dx
@@ -41,7 +41,7 @@ push ax
 mul
 del
 out
-end
+jump end
 linear:
 push bx
 push 0
@@ -49,13 +49,13 @@ jne ans2
 push cx
 push 0
 jne ans1
-push 1000000;БЕСКОНЕЧНО КОРНЕЙ
+push 1000
 out
-end
+jump end
 ans1:
-push 0; 0 КОРНЕЙ
+push 0
 out
-end
+jump end
 ans2:
 push bx
 push -1
@@ -63,4 +63,5 @@ push cx
 mul
 del
 out
+end:
 end

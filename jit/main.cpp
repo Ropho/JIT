@@ -2,12 +2,11 @@
 
 
 int main (void) {
-
 /////////////////////////////////////////////////
     size_t error = 0;
 /////////////////////////////////////////////////
     FILE *bin = fopen ("cpu/asm/binary.bin", "rb");
-    if (!bin) {
+    if  (!bin) {
         perror ("FILE OPEN ERROR");
         return OPEN_FILE_ERROR;
     }
